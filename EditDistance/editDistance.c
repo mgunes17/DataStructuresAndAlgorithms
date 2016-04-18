@@ -11,7 +11,6 @@ typedef struct{
 
 /*
 Algoritma word1 in word2 ye donusturulmesi uzerine kurgulanmıstır
-
 koordinat i ,j ise
 -----------------
 I insert i, j-1
@@ -37,7 +36,6 @@ int main(){
 	/*
 	char word1[20];
 	char word2[20];
-
 	printf("ilk kelimeyi giriniz\n");
 	scanf("%s", word1);
 	printf("ikinci kelimeyi giriniz\n");
@@ -134,8 +132,14 @@ CELL ** allocateMatrix(int m, int n){
 }
 
 void initializeMatrix(CELL **editMatrix, int m, int n){
-	int i;
+	int i, j;
 
+	for(i=0; i<m; i++){
+		for(j=0; j<n; j++){
+			editMatrix[i][j].cost = -1;
+			editMatrix[i][j].change = 'X';
+		}
+	}
 	//ilk sutun icin
 	for(i=0; i<m; i++){
 		editMatrix[i][0].cost = i;
