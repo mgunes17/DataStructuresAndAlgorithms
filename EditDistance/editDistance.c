@@ -7,6 +7,7 @@ typedef struct{
 	//int preY; //onceki noktanin y koordinati
 	int cost; //koordinatin maliyeti
 	char change; //dogrudan islemin adını da tutabiliriz
+	int c[3];
 }CELL;
 
 /*
@@ -17,6 +18,7 @@ I insert i, j-1
 D delete i-1, j
 M match  i-1, j-1
 R replace i-1, j-1
+F free
 */
 
 //fonksiyon prototipleri
@@ -98,7 +100,40 @@ void findMinimum(CELL ** editMatrix, int i, int j){
 	int insert = editMatrix[i][j-1].cost + 1; // + insertCost
 	int replace = editMatrix[i-1][j-1].cost + 1; // + replaceCost
 
-	if(delete <= insert && delete <= replace){
+	if(delete < insert && delete < replace){
+		editMatrix[i][j].cost = delete;
+		editMatrix[i][j].c[0] = 1;
+	}
+	else if(insert < delete && insert < replace){
+		editMatrix[i][j].cost = insert;
+		editMatrix[i][j].c[1] = 1;
+	}
+	else if(replace < delete && replace < insert){
+		editMatrix[i][j].cost = replace;
+		editMatrix[i][j].c[2] = replace;
+	}
+	else if(delete == insert && delete <replace){
+		editMatrix[i][j].cost = delete;
+		editMatrix[i][j].c[0] = 1;
+		editMatrix[i][j].c[1] = 1;
+	}
+	else if(delete == replace && delete < insert){
+		editMatrix[i][j].cost = delete;
+		editMatrix[i][j].c[0] = 1;
+		editMatrix[i][j].c[2] = 1;
+	}
+	else if(replace == insert && insert < delete){
+		editMatrix[i][j].cost = insert;
+		editMatrix[i][j].c[2] = 1;
+		editMatrix[i][j].c[1] = 1;
+	}
+	else{
+		editMatrix[i][j].cost = delete;
+		editMatrix[i][j].c[0] = 1;
+		editMatrix[i][j].c[1] = 1;
+		editMatrix[i][j].c[2] = 1;
+	}
+	/*if(delete <= insert && delete <= replace){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].change = 'D';
 	}
@@ -109,7 +144,7 @@ void findMinimum(CELL ** editMatrix, int i, int j){
 	else{
 		editMatrix[i][j].cost = replace;
 		editMatrix[i][j].change = 'R';
-	}
+	}*/
 }
 
 CELL ** allocateMatrix(int m, int n){
@@ -137,7 +172,10 @@ void initializeMatrix(CELL **editMatrix, int m, int n){
 	for(i=0; i<m; i++){
 		for(j=0; j<n; j++){
 			editMatrix[i][j].cost = -1;
-			editMatrix[i][j].change = 'X';
+			editMatrix[i][j].change = 'F';
+			editMatrix[i][j].c[0] = 0;
+			editMatrix[i][j].c[1] = 0;
+			editMatrix[i][j].c[2] = 0;
 		}
 	}
 	//ilk sutun icin
