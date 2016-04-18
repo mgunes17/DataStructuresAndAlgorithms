@@ -26,8 +26,9 @@ CELL ** allocateMatrix(int, int); //matris icin dinamik olarak yer ayir
 void initializeMatrix(CELL **, int, int); //matrisi ilklendir
 void displayCostMatrix(CELL **, int, int); //maliyetleri ekrana yaz
 void displayChangeMatrix(CELL **, int, int); //degisimleri ekrana yaz
-int editDistance(CELL ** , char *, char *, int , int );
+CELL editDistance(CELL ** , char *, char *, int , int );
 void findMinimum(CELL ** , int , int );
+void findPath(CELL);
 
 int main(){
 	/*int k = 10;
@@ -44,6 +45,7 @@ int main(){
 	scanf("%s", word2);
 	*/
 
+	CELL lastCell;
 	int i,j; //döngü i
 	int minimumCost;
 	char word1[20] = "maths";
@@ -60,16 +62,24 @@ int main(){
 	displayCostMatrix(editMatrix, m, n);
 	displayChangeMatrix(editMatrix, m, n);
 
-	minimumCost = editDistance(editMatrix, word1, word2, m, n);
+	lastCell = editDistance(editMatrix, word1, word2, m, n);
+	minimumCost = lastCell.cost;
 	displayCostMatrix(editMatrix, m, n);
 	displayChangeMatrix(editMatrix, m, n);
+
+	findPath(lastCell);
 
 	printf("\nmimimum maliyet : %d\n", minimumCost);
 
 	return 0;
 }
 
-int editDistance(CELL ** editMatrix, char *word1, char *word2, int m, int n ){
+void findPath(CELL cell){
+	//tek yol
+
+}
+
+CELL editDistance(CELL ** editMatrix, char *word1, char *word2, int m, int n ){
 	int i, j; //dongu indisleri
 	char change;
 
@@ -88,7 +98,7 @@ int editDistance(CELL ** editMatrix, char *word1, char *word2, int m, int n ){
 	displayCostMatrix(editMatrix, m, n);
 
 	printf("\n\n%d %dn", i, j);
-	return editMatrix[i-1][j-1].cost;
+	return editMatrix[i-1][j-1];
 }//end editDistance
 
 void findMinimum(CELL ** editMatrix, int i, int j){
@@ -103,35 +113,42 @@ void findMinimum(CELL ** editMatrix, int i, int j){
 	if(delete < insert && delete < replace){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].c[0] = 1;
+		editMatrix[i][j].change = 'D';
 	}
 	else if(insert < delete && insert < replace){
 		editMatrix[i][j].cost = insert;
 		editMatrix[i][j].c[1] = 1;
+		editMatrix[i][j].change = 'I';
 	}
 	else if(replace < delete && replace < insert){
 		editMatrix[i][j].cost = replace;
 		editMatrix[i][j].c[2] = replace;
+		editMatrix[i][j].change = 'R';
 	}
 	else if(delete == insert && delete <replace){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].c[0] = 1;
 		editMatrix[i][j].c[1] = 1;
+		editMatrix[i][j].change = 'D';
 	}
 	else if(delete == replace && delete < insert){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].c[0] = 1;
 		editMatrix[i][j].c[2] = 1;
+		editMatrix[i][j].change = 'D';
 	}
 	else if(replace == insert && insert < delete){
 		editMatrix[i][j].cost = insert;
 		editMatrix[i][j].c[2] = 1;
 		editMatrix[i][j].c[1] = 1;
+		editMatrix[i][j].change = 'R';
 	}
 	else{
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].c[0] = 1;
 		editMatrix[i][j].c[1] = 1;
 		editMatrix[i][j].c[2] = 1;
+		editMatrix[i][j].change = 'D';
 	}
 	/*if(delete <= insert && delete <= replace){
 		editMatrix[i][j].cost = delete;
