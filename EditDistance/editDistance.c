@@ -110,46 +110,22 @@ void findMinimum(CELL ** editMatrix, int i, int j){
 	int insert = editMatrix[i][j-1].cost + 1; // + insertCost
 	int replace = editMatrix[i-1][j-1].cost + 1; // + replaceCost
 
-	if(delete < insert && delete < replace){
+	if(delete <= insert && delete <= replace){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].c[0] = 1;
 		editMatrix[i][j].change = 'D';
 	}
-	else if(insert < delete && insert < replace){
+	if(insert <= delete && insert <= replace){
 		editMatrix[i][j].cost = insert;
 		editMatrix[i][j].c[1] = 1;
 		editMatrix[i][j].change = 'I';
 	}
-	else if(replace < delete && replace < insert){
+	if(replace <= delete && replace <= insert){
 		editMatrix[i][j].cost = replace;
 		editMatrix[i][j].c[2] = replace;
 		editMatrix[i][j].change = 'R';
 	}
-	else if(delete == insert && delete <replace){
-		editMatrix[i][j].cost = delete;
-		editMatrix[i][j].c[0] = 1;
-		editMatrix[i][j].c[1] = 1;
-		editMatrix[i][j].change = 'D';
-	}
-	else if(delete == replace && delete < insert){
-		editMatrix[i][j].cost = delete;
-		editMatrix[i][j].c[0] = 1;
-		editMatrix[i][j].c[2] = 1;
-		editMatrix[i][j].change = 'D';
-	}
-	else if(replace == insert && insert < delete){
-		editMatrix[i][j].cost = insert;
-		editMatrix[i][j].c[2] = 1;
-		editMatrix[i][j].c[1] = 1;
-		editMatrix[i][j].change = 'R';
-	}
-	else{
-		editMatrix[i][j].cost = delete;
-		editMatrix[i][j].c[0] = 1;
-		editMatrix[i][j].c[1] = 1;
-		editMatrix[i][j].c[2] = 1;
-		editMatrix[i][j].change = 'D';
-	}
+	
 	/*if(delete <= insert && delete <= replace){
 		editMatrix[i][j].cost = delete;
 		editMatrix[i][j].change = 'D';
